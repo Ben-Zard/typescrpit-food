@@ -1,10 +1,12 @@
 import React, { useRef ,useState} from "react";
+import { mealsOrder } from "../../store/CartProvider";
 import classes from "./Checkout.module.css";
 type Props = {
     hidehandleCart: () => void;
+    submitOrderHandler: (userData: mealsOrder) => void;
 };
 
-const Checkout = ({hidehandleCart}: Props) => {
+const Checkout = ({hidehandleCart,submitOrderHandler}: Props) => {
     const [formInputsValidity, setFormInputsValidity] = useState({
         name: true,
         street: true,
@@ -25,7 +27,7 @@ const Checkout = ({hidehandleCart}: Props) => {
         const setmeal = {
             name: name.current!.value,
             street: street.current!.value,
-            postalCode: zip.current!.value,
+            postal: zip.current!.value,
             city: city.current!.value,
         }
         console.log(setmeal);
@@ -33,10 +35,11 @@ const Checkout = ({hidehandleCart}: Props) => {
 
     const enteredName = !isEmpty(setmeal.name);
     const enteredStreet = !isEmpty(setmeal.street);
-    const enteredZip = !isNotFiveChars(setmeal.postalCode);
+    const enteredZip = !isNotFiveChars(setmeal.postal);
     const enteredCity = !isEmpty(setmeal.city);
 
-    setFormInputsValidity({name: enteredName,
+    setFormInputsValidity({
+      name: enteredName,
         street: enteredStreet,
         postal: enteredZip,
         city: enteredCity,});
@@ -45,9 +48,16 @@ const Checkout = ({hidehandleCart}: Props) => {
  const formisValid = enteredName && enteredStreet && enteredZip && enteredCity;
     if(!formisValid){
       throw new Error('Invalid input');
-      return; 
     }
+    // const mealsOrder = {
+    //   name:enteredName,
+    //   street:enteredStreet,
+    //   postal:enteredZip,
+    //   city:enteredCity}
+    submitOrderHandler(setmeal); 
 };
+
+
   return (
     <form className={classes.form} onSubmit = {confirmHandler}>
 

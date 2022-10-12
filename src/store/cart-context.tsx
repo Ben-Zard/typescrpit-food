@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 export interface ICart {
     id: number;
     name: string;
@@ -12,13 +12,15 @@ export type CartContextType = {
     items: ICart[];
     addItem: (item: ICart) => void;
     removeItem: (id: number) => void;
+    clearCart: () => void;
   };
 
   const defalutCart={
   items:[],
   totalAmount: 0,
   addItem: () => {},
-  removeItem: () => { }
+  removeItem: () => {},
+  clearCart:()=>{}
   }
 
 const CartContext = createContext<CartContextType |undefined| null>(defalutCart);

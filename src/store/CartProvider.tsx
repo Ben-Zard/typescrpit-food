@@ -1,11 +1,23 @@
-import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useReducer, } from "react";
+import { useReducer } from "react";
 import CartContext, { ICart} from './cart-context';
 import React from 'react';
 
 type Props= {
   children: React.ReactNode;
 }
+export interface meals {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+}
 
+export interface mealsOrder{
+  name: string,
+  street: string,
+  postal: string,
+  city: string,
+}
 interface initalstate{
   items:ICart[];
   totalAmount: number,
@@ -14,6 +26,7 @@ interface initalstate{
 type ActionType =
  | { type: 'ADD', item: ICart }
  | { type: 'REMOVE', id: number }
+ | { type: 'CLEAR' };
 
 const defaultCartState = {
   items: [],
@@ -67,6 +80,9 @@ const cartReducer = (state: initalstate, action: ActionType) => {
       totalAmount: updatedTotalAmount
     };
   }
+  if (action.type === 'CLEAR') {
+    return defaultCartState;
+  }
 
   return defaultCartState;
 };
@@ -85,11 +101,16 @@ const CartProvider = ({children}:Props) => {
     dispatchCartAction({ type: 'REMOVE', id: id });
   };
 
+  const clearCartHandler = () => {
+    dispatchCartAction({ type: 'CLEAR' });
+  };
+
   const cartContextt = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
+    clearCart: clearCartHandler,
   };
 
   return (
